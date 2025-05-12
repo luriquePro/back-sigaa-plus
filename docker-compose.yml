@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  redis:
+    image: 'redis/redis-stack'
+    ports:
+      - '6379:6379'
+      - '8001:8001'
+    networks:
+      - arena-network
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+        reservations:
+          memory: 128m
+
+  mongodb:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - '27017:27017'
+    networks:
+      - arena-network
+    volumes:
+      - mongo-data:/data/db
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 256mz
+
+networks:
+  arena-network:
+    name: arena-network
+    driver: bridge
+
+volumes:
+  mongo-data:

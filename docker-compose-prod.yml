@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - '27017:27017'
+    networks:
+      - app-network
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-password}
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 256m
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: node-api
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./build/env-production
+    volumes:
+      - ./dist:/app/dist
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
+
+volumes:
+  mongo-data:
+  redis_data:
