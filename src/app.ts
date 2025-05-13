@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 
 import { errorMiddleware } from './middlewares/error.middleware.ts';
 import { Routes } from './routes.ts';
-import { ForbiddenError } from './utils/apiErros.util.ts';
+import { CustomError } from './utils/apiErros.util.ts';
 
 class App {
   private readonly application: Application;
@@ -31,7 +31,15 @@ class App {
           if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
           } else {
-            callback(new ForbiddenError(`Origem de acesso ${origin} não permitida.`));
+            callback(
+              new CustomError(
+                {
+                  message: `Origem de acesso ${origin} não permitida.`,
+                  cors_block: true,
+                },
+                403,
+              ),
+            );
           }
         },
         credentials: true,
