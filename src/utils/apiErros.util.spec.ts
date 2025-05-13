@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { ClientSession } from 'mongoose';
 
-import { ApiError, BadRequestError, CustomError, NotFoundError, UnauthorizedError, ValidationError } from './apiErros.util.ts';
+import { ApiError, BadRequestError, CustomError, ForbiddenError, NotFoundError, UnauthorizedError, ValidationError } from './apiErros.util.ts';
 
 describe('ApiError classes', () => {
   const mockSession = {
@@ -29,6 +29,13 @@ describe('ApiError classes', () => {
 
     expect(mockSession.abortTransaction).toHaveBeenCalledTimes(1);
     expect(mockSession.endSession).toHaveBeenCalledTimes(1);
+
+    new ApiError('With session', 403, mockSession as unknown as ClientSession);
+
+    await Promise.resolve();
+
+    expect(mockSession.abortTransaction).toHaveBeenCalledTimes(2);
+    expect(mockSession.endSession).toHaveBeenCalledTimes(2);
   });
 
   it('ValidationError should set statusCode to 422', () => {
@@ -45,6 +52,11 @@ describe('ApiError classes', () => {
   it('UnauthorizedError should set statusCode to 401', () => {
     const error = new UnauthorizedError('Not authorized');
     expect(error.statusCode).toBe(401);
+  });
+
+  it('ForbiddenError should set statusCode to 403', () => {
+    const error = new ForbiddenError('Not authorized');
+    expect(error.statusCode).toBe(403);
   });
 
   it('NotFoundError should set statusCode to 404', () => {

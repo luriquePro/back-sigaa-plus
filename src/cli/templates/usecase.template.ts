@@ -7,6 +7,7 @@ const generateUsecaseFunctionTemplate = (entityName: string, functionName: strin
   return [
     `import { I${PascalName}Repository } from '../../../interfaces/${entityName}.interface.ts';`,
     '',
+    "import { IDefaultReturn } from '../../../interfaces/app.interface.ts';",
     `import { I${PascalFunctionName}EntryDTO, I${PascalFunctionName}Return, I${PascalFunctionName}Usecase } from './${functionName}.interface.ts';`,
     `import { ${PascalFunctionName}Validation } from './${functionName}.validation.ts';`,
     '',
@@ -28,11 +29,13 @@ const generateUseCaseInterfaceTemplate = (functionName: string): string => {
   const PascalFunctionName = toPascalCase(functionName);
 
   return [
+    "import { IDefaultReturn } from '../../../interfaces/app.interface.ts';",
+    '',
     `interface I${PascalFunctionName}EntryDTO {}`,
     `interface I${PascalFunctionName}Return {}`,
     '',
     `interface I${PascalFunctionName}Usecase {`,
-    `  execute(data: I${PascalFunctionName}EntryDTO): Promise<I${PascalFunctionName}Return>;`,
+    `  execute(data: I${PascalFunctionName}EntryDTO): Promise<IDefaultReturn<I${PascalFunctionName}Return>>;`,
     '}',
     '',
     `export type { I${PascalFunctionName}Usecase, I${PascalFunctionName}Return, I${PascalFunctionName}EntryDTO };`,

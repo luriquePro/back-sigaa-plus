@@ -33,6 +33,12 @@ export class UnauthorizedError extends ApiError {
   }
 }
 
+export class ForbiddenError extends ApiError {
+  constructor(message: string, session?: ClientSession) {
+    super(message, 403, session);
+  }
+}
+
 export class NotFoundError extends ApiError {
   constructor(message: string, session?: ClientSession) {
     super(message, 404, session);

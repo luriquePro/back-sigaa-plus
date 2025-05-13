@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 
 import { errorMiddleware } from './middlewares/error.middleware.ts';
 import { Routes } from './routes.ts';
+import { ForbiddenError } from './utils/apiErros.util.ts';
 
 class App {
   private readonly application: Application;
@@ -30,7 +31,7 @@ class App {
           if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
           } else {
-            callback(new Error('Not allowed by CORS'));
+            callback(new ForbiddenError(`Origem de acesso ${origin} não permitida.`));
           }
         },
         credentials: true,
@@ -72,8 +73,6 @@ class App {
     if (this.FORMAT_MESSAGE_ON_ERROR) {
       this.application.use(errorMiddleware);
     }
-
-    console.log(process.env.MONGODB_URL, process.env.MONGODB_NAME, process.env.REDIS_HOST, process.env.REDIS_PORT, process.env.REDIS_DB);
   }
 }
 
