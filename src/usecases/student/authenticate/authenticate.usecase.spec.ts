@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 
+import { APP_CONFIG } from '../../../constants/app.constant.ts';
 import { ISessionDTO } from '../../../interfaces/session.interface.ts';
 import { IStudentDTO, IStudentRepository } from '../../../interfaces/student.interface.ts';
 import { ISessionService } from '../../../services/session/session.interface.ts';
@@ -38,7 +39,11 @@ describe('Authenticate Usecase Suite', () => {
 
   let jwtSignSpy: jest.SpiedFunction<typeof jwt.sign>;
 
+  const originalAuthConfigValues = APP_CONFIG.AUTH;
+
   beforeEach(() => {
+    APP_CONFIG.AUTH.ALLOW_MULTIPLE_DEVICES = true;
+
     // Reset all mocks before each test
     jest.clearAllMocks();
 
@@ -57,6 +62,8 @@ describe('Authenticate Usecase Suite', () => {
     jest.restoreAllMocks();
     jest.clearAllMocks();
     jest.resetAllMocks();
+
+    APP_CONFIG.AUTH = originalAuthConfigValues;
   });
 
   it('should throw NotFoundError if student is not found', async () => {
@@ -146,6 +153,71 @@ describe('Authenticate Usecase Suite', () => {
     const result = await usecase.execute({ login: mockStudent.email!, password: mockStudent.password! });
 
     expect(sessionService.getUserOpenSession).toHaveBeenCalledWith(mockStudent.id);
+    expect(sessionService.inactivateAllUserSessions).toHaveBeenCalledWith(mockStudent.id);
+    expect(sessionService.createUserSession).toHaveBeenCalledWith(mockStudent.id);
+
+    expect(jwtSignSpy).toHaveBeenCalled();
+
+    expect(jwtSignSpy.mock.calls[0][0]).toHaveProperty('id', mockStudent.id);
+    expect(jwtSignSpy.mock.calls[0][0]).toHaveProperty('email', mockStudent.email);
+    expect(jwtSignSpy.mock.calls[0][0]).toHaveProperty('sessionId', mockSession.id);
+    expect(jwtSignSpy.mock.calls[0][1]).toBe('test-secret');
+    expect(jwtSignSpy.mock.calls[0][2]).toEqual({ expiresIn: '2d' });
+
+    expect(result).toHaveProperty('is_error', false);
+    expect(result.response).toEqual({
+      id: mockStudent.id,
+      name: mockStudent.name,
+      email: mockStudent.email,
+      cpf: mockStudent.cpf,
+      token: 'fake-token',
+      start_session: mockSession.start_session,
+      end_session: mockSession.end_session,
+      token_expires: expect.any(Date),
+    });
+  });
+
+  it('should not inactivate sessions if multi-device auth is enabled', async () => {
+    APP_CONFIG.AUTH.ALLOW_MULTIPLE_DEVICES = true;
+
+    studentRepository.findOneByObj.mockResolvedValue(mockStudent as IStudentDTO);
+    sessionService.getUserOpenSession.mockResolvedValue(mockSession as ISessionDTO);
+    sessionService.createUserSession.mockResolvedValue(mockSession as ISessionDTO);
+
+    const result = await usecase.execute({ login: mockStudent.email!, password: mockStudent.password! });
+
+    expect(sessionService.inactivateAllUserSessions).not.toHaveBeenCalled();
+    expect(sessionService.createUserSession).not.toHaveBeenCalled();
+
+    expect(jwtSignSpy).toHaveBeenCalled();
+
+    expect(jwtSignSpy.mock.calls[0][0]).toHaveProperty('id', mockStudent.id);
+    expect(jwtSignSpy.mock.calls[0][0]).toHaveProperty('email', mockStudent.email);
+    expect(jwtSignSpy.mock.calls[0][0]).toHaveProperty('sessionId', mockSession.id);
+    expect(jwtSignSpy.mock.calls[0][1]).toBe('test-secret');
+    expect(jwtSignSpy.mock.calls[0][2]).toEqual({ expiresIn: '2d' });
+
+    expect(result).toHaveProperty('is_error', false);
+    expect(result.response).toEqual({
+      id: mockStudent.id,
+      name: mockStudent.name,
+      email: mockStudent.email,
+      cpf: mockStudent.cpf,
+      token: 'fake-token',
+      start_session: mockSession.start_session,
+      end_session: mockSession.end_session,
+      token_expires: expect.any(Date),
+    });
+  });
+
+  it('should inactivate all sessions and create new if multi-device auth is disabled', async () => {
+    APP_CONFIG.AUTH.ALLOW_MULTIPLE_DEVICES = false;
+
+    studentRepository.findOneByObj.mockResolvedValue(mockStudent as IStudentDTO);
+    sessionService.getUserOpenSession.mockResolvedValue(mockSession as ISessionDTO);
+
+    const result = await usecase.execute({ login: mockStudent.email!, password: mockStudent.password! });
+
     expect(sessionService.inactivateAllUserSessions).toHaveBeenCalledWith(mockStudent.id);
     expect(sessionService.createUserSession).toHaveBeenCalledWith(mockStudent.id);
 

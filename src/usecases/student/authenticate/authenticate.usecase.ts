@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 
+import { APP_CONFIG } from '../../../constants/app.constant.ts';
 import { IDefaultReturn } from '../../../interfaces/app.interface.ts';
 import { ISessionDTO } from '../../../interfaces/session.interface.ts';
 import { IStudentDTO, IStudentRepository } from '../../../interfaces/student.interface.ts';
@@ -46,6 +47,11 @@ class AuthenticateUsecase implements IAuthenticateUsecase {
   }
 
   private async getOrCreateSession(studentId: string): Promise<ISessionDTO> {
+    if (!APP_CONFIG.AUTH.ALLOW_MULTIPLE_DEVICES) {
+      await this.sessionService.inactivateAllUserSessions(studentId);
+      return this.sessionService.createUserSession(studentId);
+    }
+
     const existingSession = await this.sessionService.getUserOpenSession(studentId);
 
     if (existingSession) {
