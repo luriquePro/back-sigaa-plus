@@ -2,7 +2,8 @@ import jwt from 'jsonwebtoken';
 
 import { IDefaultReturn } from '../../../interfaces/app.interface.ts';
 import { IStudentDTO, IStudentRepository } from '../../../interfaces/student.interface.ts';
-import { NotFoundError } from '../../../utils/apiErros.util.ts';
+import { NotFoundError } from '../../../utils/api-erros.ts';
+import { ApiReturn } from '../../../utils/api-return.ts';
 
 import { IAuthenticateEntryDTO, IAuthenticateReturn, IAuthenticateUsecase, ITokenPayload } from './authenticate.interface.ts';
 import { AuthenticateValidation } from './authenticate.validation.ts';
@@ -26,16 +27,15 @@ class AuthenticateUsecase implements IAuthenticateUsecase {
 
     const authToken = this.getAuthToken(student);
 
-    return {
-      is_error: false,
-      response: {
-        id: student.id,
-        name: student.name,
-        email: student.email,
-        cpf: student.cpf,
-        token: authToken,
-      },
+    const result: IAuthenticateReturn = {
+      id: student.id,
+      name: student.name,
+      email: student.email,
+      cpf: student.cpf,
+      token: authToken,
     };
+
+    return ApiReturn(result);
   }
 
   private getAuthToken({ id, email }: IStudentDTO): string {
