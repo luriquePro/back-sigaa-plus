@@ -11,6 +11,9 @@ interface IAuthenticateReturn {
   email: string;
   cpf: string;
   token: string;
+  start_session: Date;
+  end_session: Date;
+  token_expires: Date;
 }
 
 interface IAuthenticateUsecase {
@@ -20,6 +23,7 @@ interface IAuthenticateUsecase {
 interface ITokenPayload {
   id: string;
   email: string;
+  sessionId: string;
 }
 
 export type { IAuthenticateEntryDTO, IAuthenticateReturn, IAuthenticateUsecase, ITokenPayload };
