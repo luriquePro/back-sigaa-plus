@@ -4,7 +4,7 @@ import moment from 'moment';
 import { IRateLimit, IRequestCounter } from '../interfaces/app.interface.ts';
 import { redisClient } from '../models/redis.model.ts';
 import { AppRedisRepository } from '../repositories/redis/app.repository.ts';
-import { CustomError } from '../utils/apiErros.util.ts';
+import { CustomError } from '../utils/api-erros.ts';
 
 const appRedisRepository = new AppRedisRepository(redisClient);
 
@@ -12,7 +12,7 @@ const RateLimit =
   ({ timeLimitInSeconds = 30, limitRequestPerTime = 10, messageInError }: IRateLimit = {}) =>
   async (request: Request, response: Response, next: NextFunction) => {
     // get User Data
-    const userKey = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
+    const userKey = request.student ? request.student.id : request.headers['x-forwarded-for'] || request.socket.remoteAddress;
     const path = request.route?.path;
     const method = request.method;
 

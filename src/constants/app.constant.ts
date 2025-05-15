@@ -1,10 +1,6 @@
 const APP_CONFIG = {
-  SESSION: {
-    DURATION_TIME_IN_MINUTES: 24 * 60,
-  },
-  AUTH: {
-    ALLOW_MULTIPLE_DEVICES: false,
-  },
+  SESSION: { DURATION_TIME_IN_MINUTES: 24 * 60 },
+  AUTH: { ALLOW_MULTIPLE_DEVICES: false },
 };
 
 export { APP_CONFIG };
