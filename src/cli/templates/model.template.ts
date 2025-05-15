@@ -1,4 +1,4 @@
-import { toPascalCase } from '../../utils/toPascalCase.ts';
+import { toPascalCase } from '../../utils/to_pascal_case.ts';
 
 const generateModelTemplate = (entityName: string): string => {
   const PascalName = toPascalCase(entityName);
