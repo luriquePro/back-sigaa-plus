@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { isValidCpf } from './isValidCpf.ts';
+import { isValidCpf } from '../is_valid_cpf.ts';
 
 describe('isValidCpf', () => {
   it('should return true for a valid CPF', () => {

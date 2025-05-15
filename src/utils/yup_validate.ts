@@ -1,6 +1,6 @@
 import { AnyObject, object } from 'yup';
 
-import { CustomError } from './apiErros.util.ts';
+import { CustomError } from './api-erros.ts';
 
 const YupValidate = (shape: AnyObject, data: object): void => {
   try {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { isValidEmail } from './isValidEmail.ts';
+import { isValidEmail } from '../is_valid_email.ts';
 
 describe('isValidEmail', () => {
   it('should return true for valid emails', () => {

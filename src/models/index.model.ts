@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 
 import { IIndexModel, INDEX_STATUS } from '../interfaces/index.interface.ts';
-import { GenerateRandomid } from '../utils/generateRandomId.util.ts';
+import { GenerateRandomid } from '../utils/generate-random-id.ts';
 
 const UserSchema = new Schema<IIndexModel>(
   {

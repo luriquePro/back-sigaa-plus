@@ -1,6 +1,6 @@
 import { AnyObject, string } from 'yup';
 
-import { YupValidate } from '../../../utils/yupValidate.util.ts';
+import { YupValidate } from '../../../utils/yup_validate.ts';
 
 import { IIndexHelloWorldEntryDTO } from './hello-world.interface.ts';
 

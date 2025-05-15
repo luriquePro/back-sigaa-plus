@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 
 import { IStudentModel, STUDENT_GENDER, STUDENT_STATUS } from '../interfaces/student.interface.ts';
-import { GenerateRandomid } from '../utils/generateRandomId.util.ts';
+import { GenerateRandomid } from '../utils/generate-random-id.ts';
 
 const StudentSchema = new Schema<IStudentModel>(
   {

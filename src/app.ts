@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 
 import { errorMiddleware } from './middlewares/error.middleware.ts';
 import { Routes } from './routes.ts';
-import { CustomError } from './utils/apiErros.util.ts';
+import { CustomError } from './utils/api-erros.ts';
 
 class App {
   private readonly application: Application;

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { ClientSession } from 'mongoose';
 
-import { ApiError, BadRequestError, CustomError, ForbiddenError, NotFoundError, UnauthorizedError, ValidationError } from './apiErros.util.ts';
+import { ApiError, BadRequestError, CustomError, ForbiddenError, NotFoundError, UnauthorizedError, ValidationError } from '../api-erros.ts';
 
 describe('ApiError classes', () => {
   const mockSession = {

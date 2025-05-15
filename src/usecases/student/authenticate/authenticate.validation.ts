@@ -1,8 +1,8 @@
 import { AnyObject, string } from 'yup';
 
-import { isValidCpf } from '../../../utils/isValidCpf.ts';
-import { isValidEmail } from '../../../utils/isValidEmail.ts';
-import { YupValidate } from '../../../utils/yupValidate.util.ts';
+import { isValidCpf } from '../../../utils/is_valid_cpf.ts';
+import { isValidEmail } from '../../../utils/is_valid_email.ts';
+import { YupValidate } from '../../../utils/yup_validate.ts';
 
 import { IAuthenticateEntryDTO } from './authenticate.interface.ts';
 
