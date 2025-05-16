@@ -1,5 +1,7 @@
 import { FilterQuery, MongooseUpdateQueryOptions, ProjectionType, QueryOptions, SaveOptions, UpdateQuery } from 'mongoose';
 
+import { COURSE_LEVEL, COURSE_MODALITY, COURSE_SHIFT } from './course.interface.ts';
+
 enum STUDENT_STATUS {
   PENDING = 'PENDING',
   ACTIVE = 'ACTIVE',
@@ -17,7 +19,23 @@ enum STUDENT_GENDER {
 interface IStudentCourse {
   id: string;
   name: string;
+  code: string;
+  label: string;
+  modality: COURSE_MODALITY;
+  shift: COURSE_SHIFT;
+  level: COURSE_LEVEL;
   current_semester: number;
+  duration_in_semesters: number;
+  workload: number;
+  completed_hours: number;
+}
+
+interface IStudentAddress {
+  street: string;
+  number: string;
+  city: string;
+  state: string;
+  zip: string;
 }
 
 interface IStudentDTO {
@@ -35,13 +53,7 @@ interface IStudentDTO {
   enrollment_date: Date;
   gender: STUDENT_GENDER;
   nationality: string;
-  address: {
-    street: string;
-    number: string;
-    city: string;
-    state: string;
-    zip: string;
-  };
+  address: IStudentAddress;
 }
 
 interface IStudentCreateEntryDTO {}

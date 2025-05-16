@@ -13,7 +13,7 @@ const CourseSchema = new Schema<ICourseModel>(
     modality: { type: String, required: true, trim: true, enum: COURSE_MODALITY, index: true },
     level: { type: String, required: true, trim: true, enum: COURSE_LEVEL, index: true },
     workload: { type: Number, required: true },
-    durationInSemesters: { type: Number, required: true },
+    duration_in_semesters: { type: Number, required: true },
     shift: { type: String, required: true, trim: true, enum: COURSE_SHIFT, index: true },
     status: { type: String, required: true, trim: true, index: true, enum: COURSE_STATUS, default: COURSE_STATUS.ACTIVE },
   },

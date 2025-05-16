@@ -33,8 +33,8 @@ interface ICourseDTO {
   label: string;
   modality: COURSE_MODALITY;
   level: COURSE_LEVEL;
-  workload: number; // Carga horária total em horas
-  durationInSemesters: number;
+  workload: number;
+  duration_in_semesters: number;
   shift: COURSE_SHIFT;
   status: COURSE_STATUS;
 }

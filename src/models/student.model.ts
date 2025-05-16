@@ -1,5 +1,6 @@
 import { model, Schema } from 'mongoose';
 
+import { COURSE_LEVEL, COURSE_MODALITY, COURSE_SHIFT } from '../interfaces/course.interface.ts';
 import { IStudentModel, STUDENT_GENDER, STUDENT_STATUS } from '../interfaces/student.interface.ts';
 import { GenerateRandomid } from '../utils/generate-random-id.ts';
 
@@ -26,7 +27,19 @@ const StudentSchema = new Schema<IStudentModel>(
       required: true,
       default: STUDENT_STATUS.PENDING,
     },
-    course: { id: { type: String, required: true }, name: { type: String, required: true } },
+    course: {
+      id: { type: String, required: true },
+      name: { type: String, required: true },
+      code: { type: String, required: true },
+      label: { type: String, required: true },
+      modality: { type: String, required: true, enum: COURSE_MODALITY },
+      shift: { type: String, required: true, enum: COURSE_SHIFT },
+      level: { type: String, required: true, enum: COURSE_LEVEL },
+      current_semester: { type: Number, required: true },
+      duration_in_semesters: { type: Number, required: true },
+      workload: { type: Number, required: true },
+      completed_hours: { type: Number, required: true },
+    },
     registration_number: { type: String, required: true, unique: true },
     enrollment_date: { type: Date, required: true },
     gender: { type: String, enum: STUDENT_GENDER, required: true },
