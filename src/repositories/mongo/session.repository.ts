@@ -3,7 +3,7 @@ import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { ISessionCreateDTO, ISessionDTO, ISessionModel } from '../../interfaces/session.interface.ts';
 import { ISessionRepository } from '../../services/session/session.interface.ts';
 
-class SessionRepository implements ISessionRepository {
+class MongoSessionRepository implements ISessionRepository {
   constructor(private readonly sessionModel: Model<ISessionModel>) {}
 
   public async create(dataSession: ISessionCreateDTO): Promise<ISessionDTO> {
@@ -19,4 +19,4 @@ class SessionRepository implements ISessionRepository {
   }
 }
 
-export { SessionRepository };
+export { MongoSessionRepository };

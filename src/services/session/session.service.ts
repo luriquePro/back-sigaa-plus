@@ -6,7 +6,7 @@ import { ISessionCreateDTO, ISessionDTO, SESSION_STATUS } from '../../interfaces
 import { ISessionRepository, ISessionService } from './session.interface.ts';
 
 class SessionService implements ISessionService {
-  constructor(private readonly sessionRepository: ISessionRepository) {}
+  constructor(private readonly SessionRepository: ISessionRepository) {}
 
   public async createUserSession(userId: string): Promise<ISessionDTO> {
     const dataSession: ISessionCreateDTO = {
@@ -15,15 +15,15 @@ class SessionService implements ISessionService {
       end_session: moment().utc().add(APP_CONFIG.SESSION.DURATION_TIME_IN_MINUTES, 'minutes').toDate(),
     };
 
-    return await this.sessionRepository.create(dataSession);
+    return await this.SessionRepository.create(dataSession);
   }
 
   public async inactivateAllUserSessions(userId: string): Promise<void> {
-    return await this.sessionRepository.updateByObj({ user: userId }, { status: SESSION_STATUS.INACTIVE });
+    return await this.SessionRepository.updateByObj({ user: userId }, { status: SESSION_STATUS.INACTIVE });
   }
 
   public async getUserOpenSession(userId: string): Promise<ISessionDTO | null> {
-    return await this.sessionRepository.findOneByObj({
+    return await this.SessionRepository.findOneByObj({
       user: userId,
       status: SESSION_STATUS.ACTIVE,
       end_session: { $gte: moment().utc().toDate() },
