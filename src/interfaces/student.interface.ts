@@ -75,6 +75,6 @@ interface IStudentRepository {
   countDocuments(filter: FilterQuery<IStudentModel>): Promise<number>;
 }
 
-export type { IStudentCreateDTO, IStudentCreateEntryDTO, IStudentCreateReturn, IStudentDTO, IStudentModel, IStudentRepository };
+export type { IStudentCourse, IStudentCreateDTO, IStudentCreateEntryDTO, IStudentCreateReturn, IStudentDTO, IStudentModel, IStudentRepository };
 
 export { STUDENT_GENDER, STUDENT_STATUS };

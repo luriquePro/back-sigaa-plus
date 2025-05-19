@@ -26,7 +26,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   const { userId, sessionId } = decodeToken(token);
 
   // Buscar o usuário no banco de dados
-  const student = await StudentRepository.findOneByObj({ _id: userId });
+  const student = await StudentRepository.findOneByObj({ id: userId });
   if (!student) {
     resetRequest(req);
     throw new CustomError({ message: 'Sessão expirada. Faça login novamente', requires_login: true }, 401);
