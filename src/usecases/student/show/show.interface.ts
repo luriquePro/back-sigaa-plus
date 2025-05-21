@@ -1,4 +1,5 @@
 import { IDefaultReturn } from '../../../interfaces/app.interface.ts';
+import { COURSE_STATUS } from '../../../interfaces/course.interface.ts';
 import { IStudentAvatar, IStudentCourse } from '../../../interfaces/student.interface.ts';
 
 interface IShowEntryDTO {
@@ -8,8 +9,9 @@ interface IShowEntryDTO {
 interface IShowReturn {
   name: string;
   id: string;
+  registration_number: string;
   avatar?: IStudentAvatar;
-  course: IStudentCourse;
+  course: IStudentCourse & { status: COURSE_STATUS };
 }
 
 interface IShowUsecase {

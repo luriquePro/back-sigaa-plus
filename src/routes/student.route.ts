@@ -4,8 +4,10 @@ import { USER_AVATAR_CONFIGS } from '../constants/user.constant.ts';
 import { StudentController } from '../controllers/student.controller.ts';
 import { authMiddleware } from '../middlewares/authenticate.middleware.ts';
 import { RateLimit } from '../middlewares/rate-limit.middleware.ts';
+import { CourseModel } from '../models/course.model.ts';
 import { SessionModel } from '../models/session.model.ts';
 import { StudentModel } from '../models/student.model.ts';
+import { MongoCourseRepository } from '../repositories/mongo/course.repository.ts';
 import { MongoSessionRepository } from '../repositories/mongo/session.repository.ts';
 import { MongoStudentRepository } from '../repositories/mongo/student.repository.ts';
 import { SessionService } from '../services/session/session.service.ts';
@@ -15,15 +17,17 @@ import { UploadAvatarUsecase } from '../usecases/student/upload-avatar/upload-av
 
 const studentRoutes = Router();
 
+// Repos
 const studentRepository = new MongoStudentRepository(StudentModel);
+const sessionRepository = new MongoSessionRepository(SessionModel);
+const courseRepository = new MongoCourseRepository(CourseModel);
 
 // SESSION
-const SessionRepository = new MongoSessionRepository(SessionModel);
-const sessionService = new SessionService(SessionRepository);
+const sessionService = new SessionService(sessionRepository);
 
 // USECASES
 const authenticateUsecase = new AuthenticateUsecase(studentRepository, sessionService);
-const showUsecase = new ShowUsecase(studentRepository);
+const showUsecase = new ShowUsecase(studentRepository, courseRepository);
 const uploadAvatarUsecase = new UploadAvatarUsecase(studentRepository, USER_AVATAR_CONFIGS);
 
 const studentController = new StudentController(authenticateUsecase, showUsecase, uploadAvatarUsecase);

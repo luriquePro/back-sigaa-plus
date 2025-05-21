@@ -45,6 +45,7 @@ interface ICourseCreateDTO {}
 
 interface ICourseRepository {
   create(data: ICourseCreateDTO, options?: SaveOptions): Promise<ICourseModel>;
+  findOneByObj(filter: FilterQuery<ICourseModel>, projection?: ProjectionType<ICourseModel>, options?: QueryOptions): Promise<ICourseDTO | null>;
   findByObj(filter: FilterQuery<ICourseModel>, projection?: ProjectionType<ICourseModel>, options?: QueryOptions): Promise<ICourseDTO[]>;
   updateOneByObj(filter: FilterQuery<ICourseModel>, data: UpdateQuery<ICourseModel>, options?: MongooseUpdateQueryOptions): Promise<void>;
   updateManyByObj(filter: FilterQuery<ICourseModel>, data: UpdateQuery<ICourseModel>, options?: MongooseUpdateQueryOptions): Promise<void>;

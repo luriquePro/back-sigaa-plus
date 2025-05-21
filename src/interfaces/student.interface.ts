@@ -30,6 +30,8 @@ interface IStudentCourse {
   duration_in_semesters: number;
   workload: number;
   completed_hours: number;
+  entry_semester: string;
+  current_semester_date: string;
 }
 
 interface IStudentAddress {
