@@ -21,6 +21,7 @@ class ShowUsecase implements IShowUsecase {
       id: student.id,
       name: student.name,
       course: student.course,
+      avatar: student.avatar,
     };
 
     return ApiReturn(result);

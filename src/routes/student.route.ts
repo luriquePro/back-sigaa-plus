@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import { USER_AVATAR_CONFIGS } from '../constants/user.constant.ts';
 import { StudentController } from '../controllers/student.controller.ts';
 import { authMiddleware } from '../middlewares/authenticate.middleware.ts';
 import { RateLimit } from '../middlewares/rate-limit.middleware.ts';
@@ -10,6 +11,7 @@ import { MongoStudentRepository } from '../repositories/mongo/student.repository
 import { SessionService } from '../services/session/session.service.ts';
 import { AuthenticateUsecase } from '../usecases/student/authenticate/authenticate.usecase.ts';
 import { ShowUsecase } from '../usecases/student/show/show.usecase.ts';
+import { UploadAvatarUsecase } from '../usecases/student/upload-avatar/upload-avatar.usecase.ts';
 
 const studentRoutes = Router();
 
@@ -22,10 +24,12 @@ const sessionService = new SessionService(SessionRepository);
 // USECASES
 const authenticateUsecase = new AuthenticateUsecase(studentRepository, sessionService);
 const showUsecase = new ShowUsecase(studentRepository);
+const uploadAvatarUsecase = new UploadAvatarUsecase(studentRepository, USER_AVATAR_CONFIGS);
 
-const studentController = new StudentController(authenticateUsecase, showUsecase);
+const studentController = new StudentController(authenticateUsecase, showUsecase, uploadAvatarUsecase);
 
 studentRoutes.post('/authenticate', RateLimit({}), studentController.authenticate.bind(studentController));
 studentRoutes.get('/show', authMiddleware, RateLimit({}), studentController.show.bind(studentController));
+studentRoutes.post('/upload-avatar', authMiddleware, RateLimit({ limitRequestPerTime: 5 }), studentController.uploadAvatar.bind(studentController));
 
 export { studentRoutes };

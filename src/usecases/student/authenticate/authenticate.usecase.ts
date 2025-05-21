@@ -53,7 +53,6 @@ class AuthenticateUsecase implements IAuthenticateUsecase {
     }
 
     const existingSession = await this.sessionService.getUserOpenSession(studentId);
-
     if (existingSession) {
       return existingSession;
     }

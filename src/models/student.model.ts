@@ -1,7 +1,8 @@
 import { model, Schema } from 'mongoose';
 
+import { USER_AVATAR_CONFIGS } from '../constants/user.constant.ts';
 import { COURSE_LEVEL, COURSE_MODALITY, COURSE_SHIFT } from '../interfaces/course.interface.ts';
-import { IStudentModel, STUDENT_GENDER, STUDENT_STATUS } from '../interfaces/student.interface.ts';
+import { IStudentModel, STUDENT_GENDER, STUDENT_STATUS, StudentAvatarSize } from '../interfaces/student.interface.ts';
 import { GenerateRandomid } from '../utils/generate-random-id.ts';
 
 const StudentSchema = new Schema<IStudentModel>(
@@ -51,8 +52,27 @@ const StudentSchema = new Schema<IStudentModel>(
       state: { type: String, required: true },
       zip: { type: String, required: true },
     },
+    avatar: {
+      image_id_base: { type: String },
+      extension: { type: String, enum: USER_AVATAR_CONFIGS.FILE_EXTENSIONS },
+      sizes: { type: [String] },
+    },
   },
   { timestamps: true },
 );
+
+StudentSchema.post(['find', 'findOne'], document => {
+  if (document && document.avatar) {
+    const avatarSizes = document.avatar.sizes as StudentAvatarSize[];
+
+    const imageSizesWithPath: Partial<Record<StudentAvatarSize, string>> = {};
+
+    for (const size of avatarSizes) {
+      imageSizesWithPath[size] = `${process.env.API_IMAGE_URL}/${document.avatar.image_id_base}_${size}.${document.avatar.extension}`;
+    }
+
+    document.avatar.sizes = imageSizesWithPath;
+  }
+});
 
 export const StudentModel = model<IStudentModel>('student', StudentSchema);

@@ -16,6 +16,8 @@ enum STUDENT_GENDER {
   OTHER = 'OTHER',
 }
 
+type StudentAvatarSize = 'lg' | 'md' | 'sm' | 'xl' | 'xs';
+
 interface IStudentCourse {
   id: string;
   name: string;
@@ -38,6 +40,12 @@ interface IStudentAddress {
   zip: string;
 }
 
+interface IStudentAvatar {
+  image_id_base: string;
+  extension: string;
+  sizes: StudentAvatarSize[];
+}
+
 interface IStudentDTO {
   id: string;
   name: string;
@@ -54,6 +62,7 @@ interface IStudentDTO {
   gender: STUDENT_GENDER;
   nationality: string;
   address: IStudentAddress;
+  avatar?: IStudentAvatar;
 }
 
 interface IStudentCreateEntryDTO {}
@@ -75,6 +84,16 @@ interface IStudentRepository {
   countDocuments(filter: FilterQuery<IStudentModel>): Promise<number>;
 }
 
-export type { IStudentCourse, IStudentCreateDTO, IStudentCreateEntryDTO, IStudentCreateReturn, IStudentDTO, IStudentModel, IStudentRepository };
+export type {
+  IStudentAvatar,
+  IStudentCourse,
+  IStudentCreateDTO,
+  IStudentCreateEntryDTO,
+  IStudentCreateReturn,
+  IStudentDTO,
+  IStudentModel,
+  IStudentRepository,
+  StudentAvatarSize,
+};
 
 export { STUDENT_GENDER, STUDENT_STATUS };

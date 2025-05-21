@@ -81,6 +81,8 @@ class App {
     if (this.FORMAT_MESSAGE_ON_ERROR) {
       this.application.use(errorMiddleware);
     }
+
+    this.application.use('/tmp', express.static('public/tmp'));
   }
 }
 

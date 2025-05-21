@@ -1,5 +1,5 @@
 import { IDefaultReturn } from '../../../interfaces/app.interface.ts';
-import { IStudentCourse } from '../../../interfaces/student.interface.ts';
+import { IStudentAvatar, IStudentCourse } from '../../../interfaces/student.interface.ts';
 
 interface IShowEntryDTO {
   id: string;
@@ -8,6 +8,7 @@ interface IShowEntryDTO {
 interface IShowReturn {
   name: string;
   id: string;
+  avatar?: IStudentAvatar;
   course: IStudentCourse;
 }
 
