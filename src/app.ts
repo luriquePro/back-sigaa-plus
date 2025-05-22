@@ -23,10 +23,12 @@ class App {
   }
 
   private config(): void {
+    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+
     this.application.use(
       cors({
         origin: (origin, callback) => {
-          const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+          console.log('Requisição vinda de:', origin);
 
           if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
@@ -54,20 +56,32 @@ class App {
       helmet({
         contentSecurityPolicy: {
           directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://cdn.jsdelivr.net', 'https://cdnjs.cloudflare.com'],
-            styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/'],
-            fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+            defaultSrc: ["'self'", ...allowedOrigins],
+            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://cdn.jsdelivr.net', 'https://cdnjs.cloudflare.com', ...allowedOrigins],
+            styleSrc: [
+              "'self'",
+              "'unsafe-inline'",
+              'https://fonts.googleapis.com',
+              'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/',
+              ...allowedOrigins,
+            ],
+            fontSrc: ["'self'", 'https://fonts.gstatic.com', ...allowedOrigins],
             objectSrc: ["'none'"],
-            imgSrc: ["'self'", 'data:', 'https://framerusercontent.com'],
+            imgSrc: ["'self'", 'data:', 'https://framerusercontent.com', ...allowedOrigins],
             upgradeInsecureRequests: [],
-            workerSrc: ["'self'", 'blob:'],
+            workerSrc: ["'self'", 'blob:', ...allowedOrigins],
           },
         },
       }),
     );
 
     this.application.use(helmet.xssFilter());
+
+    this.application.use((req, res, next) => {
+      res.setHeader('Referrer-Policy', 'no-referrer-when-downgrade');
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+      next();
+    });
 
     mongoose
       .connect(process.env.MONGODB_URL!, { dbName: process.env.MONGODB_NAME! })
@@ -82,7 +96,22 @@ class App {
       this.application.use(errorMiddleware);
     }
 
-    this.application.use('/tmp', express.static('public/tmp'));
+    this.application.use(
+      '/tmp',
+      cors({
+        origin: (origin, callback) => {
+          const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+
+          if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+          } else {
+            callback(new Error('Not allowed by CORS'));
+          }
+        },
+        credentials: true,
+      }),
+      express.static('public/tmp'),
+    );
   }
 }
 

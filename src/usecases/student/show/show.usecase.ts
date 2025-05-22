@@ -32,6 +32,11 @@ class ShowUsecase implements IShowUsecase {
       course: { ...student.course, status: studentCourse.status },
       avatar: student.avatar,
       registration_number: student.registration_number,
+      cpf: student.cpf,
+      email: student.email,
+      rg: student.rg,
+      phone: student.phone,
+      birth_date: student.birth_date,
     };
 
     return ApiReturn(result);

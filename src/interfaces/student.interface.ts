@@ -55,6 +55,7 @@ interface IStudentDTO {
   email: string;
   cpf: string;
   phone: string;
+  rg: string;
   password: string;
   birth_date: Date;
   status: STUDENT_STATUS;

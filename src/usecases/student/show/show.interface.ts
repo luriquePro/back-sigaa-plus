@@ -12,6 +12,11 @@ interface IShowReturn {
   registration_number: string;
   avatar?: IStudentAvatar;
   course: IStudentCourse & { status: COURSE_STATUS };
+  cpf: string;
+  email: string;
+  rg: string;
+  phone: string;
+  birth_date: Date;
 }
 
 interface IShowUsecase {
