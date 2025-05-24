@@ -7,7 +7,7 @@ import moment from 'moment';
 
 import { IUserAvatarConfigs } from '../../../constants/user.constant.ts';
 import { IDefaultReturn } from '../../../interfaces/app.interface.ts';
-import { IStudentAvatar, IStudentDTO, IStudentRepository } from '../../../interfaces/student.interface.ts';
+import { IStudentAvatar, IStudentDTO, IStudentRepository, StudentAvatarSize } from '../../../interfaces/student.interface.ts';
 import { BadRequestError, NotFoundError } from '../../../utils/api-erros.ts';
 import { ApiReturn } from '../../../utils/api-return.ts';
 
@@ -38,12 +38,16 @@ class UploadAvatarUsecase implements IUploadAvatarUsecase {
     const studentAvatar: IStudentAvatar = {
       image_id_base: baseFileName,
       extension: fileExtension,
-      sizes: Object.keys(savedFileNames),
+      sizes: Object.keys(savedFileNames) as StudentAvatarSize[],
     };
 
     await this.updateStudentAvatar(data.studentId, studentAvatar);
 
-    return ApiReturn(savedFileNames);
+    return ApiReturn({
+      image_id_base: studentAvatar.image_id_base,
+      extension: studentAvatar.extension,
+      sizes: savedFileNames,
+    });
   }
 
   private async getStudentOrThrow(studentId: string): Promise<IStudentDTO> {
@@ -64,8 +68,13 @@ class UploadAvatarUsecase implements IUploadAvatarUsecase {
     return mimetype.split('/')[1];
   }
 
-  private async saveAllSizes(filepath: string, baseFileName: string, extension: string): Promise<Record<string, string>> {
-    const savedFiles: Record<string, string> = {};
+  private async saveAllSizes(filepath: string, baseFileName: string, extension: string): Promise<Record<StudentAvatarSize, string>> {
+    const savedFiles: Record<StudentAvatarSize, string> = {
+      xs: '',
+      sm: '',
+      md: '',
+      lg: '',
+    };
 
     for (const [sizeKey, percentage] of Object.entries(this.studentAvatarConfigs.IMAGE_SIZES)) {
       const thumbnailBuffer = await imageThumbnail(filepath, {
@@ -83,7 +92,7 @@ class UploadAvatarUsecase implements IUploadAvatarUsecase {
         console.warn(`Falha ao gerar thumbnail para ${sizeKey}:`, err);
       }
 
-      savedFiles[sizeKey] = fileName;
+      savedFiles[sizeKey as StudentAvatarSize] = fileName;
     }
 
     return savedFiles;

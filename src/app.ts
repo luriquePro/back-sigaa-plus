@@ -28,8 +28,6 @@ class App {
     this.application.use(
       cors({
         origin: (origin, callback) => {
-          console.log('Requisição vinda de:', origin);
-
           if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
           } else {
@@ -49,6 +47,7 @@ class App {
     );
 
     this.application.use(express.json());
+    this.application.use(express.urlencoded({ extended: true }));
 
     this.application.disable('X-Powered-By');
 

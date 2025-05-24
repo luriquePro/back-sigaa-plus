@@ -20,8 +20,8 @@ const USER_AVATAR_CONFIGS = {
     xs: 15,
     sm: 25,
     md: 50,
-    lg: 100,
-    xl: 200,
+    lg: 75,
+    xl: 100,
   },
   TMP_FOLDER: path.resolve(__dirname, '..', '..', 'public', 'tmp'),
 };
